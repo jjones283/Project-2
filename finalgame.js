@@ -2,7 +2,8 @@
 var actorChars = {
   "@": Player,
   "o": Coin, // A coin will wobble up and down
-  "=": Lava, "|": Lava, "v": Lava  
+  "=": Lava, "|": Lava, "v": Lava 
+  "%": Crystal, //a crystal will shake side to side   
 };
 
 function Level(plan) {
@@ -114,6 +115,13 @@ function elt(name, className) {
   if (className) elt.className = className;
   return elt;
 }
+function Crystal(pos) {
+  this.basePos = this.pos = pos.plus(new Vector(0.4, 0.2));
+  this.size = new Vector(0.8, 0.8);
+  this.wobble = Math.random() * Math.PI * 2;
+}
+Crystal.prototype.type = "crystal";
+
 
 // Main display class. We keep track of the scroll window using it.
 function DOMDisplay(parent, level) {
@@ -304,7 +312,29 @@ Coin.prototype.act = function(step) {
   this.pos = this.basePos.plus(new Vector(0, wobblePos));
 };
 
+
 var maxStep = 0.05;
+
+var playerXSpeed = 7;
+
+Crystal.prototype.act = function(step) {
+  this.wobble += step * wobbleSpeed;
+  var wobblePos = Math.sin(this.wobble) * wobbleDist;
+  this.pos = this.basePos.plus(new Vector(0, wobblePos));
+};
+
+var maxStep = 0.03;
+
+var wobbleSpeed = 10, wobbleDist = 0.09;
+
+Crystal.prototype.act = function(step) {
+  this.wobble += step * wobbleSpeed;
+  var wobblePos = Math.sin(this.wobble) * wobbleDist;
+  this.pos = this.basePos.plus(new Vector(0, wobblePos));
+};
+
+
+var maxStep = 0.04;
 
 var playerXSpeed = 7;
 
